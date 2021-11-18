@@ -1,0 +1,14 @@
+appId: com.xfers.greaday.clockin
+productName: Greaday auto clock in
+copyright: Copyright © 20212 Arlo Liu
+directories:
+  output: dist
+  buildResources: resources
+extraResources:
+  - from: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null

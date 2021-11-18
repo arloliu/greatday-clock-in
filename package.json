@@ -1,0 +1,39 @@
+{
+  "private": false,
+  "name": "greatday-clock-in",
+  "description": "Auto clock in for Great Day",
+  "version": "1.0.0",
+  "author": "Arlo Liu <arlo@gmail.com>",
+  "main": "app/background.js",
+  "scripts": {
+    "dev": "nextron",
+    "build": "nextron build",
+    "build:mac": "nextron build --mac --x64",
+    "build:linux": "nextron build --linux --x64",
+    "build:win64": "nextron build --win --x64",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "@material-ui/icons": "^4.11.2",
+    "axios": "^0.24.0",
+    "conf": "^10.0.3",
+    "@date-io/date-fns": "^2.11.0",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/pickers": "^3.3.10",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.0.2"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "electron": "^15.0.0",
+    "electron-builder": "^22.11.7",
+    "electron-serve": "^1.1.0",
+    "electron-store": "^8.0.1",
+    "next": "^11.1.2",
+    "nextron": "^7.1.0"
+  },
+  "optionalDependencies": {
+    "dmg-license": "^1.0.9"
+  }
+}
