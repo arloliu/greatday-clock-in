@@ -1,4 +1,6 @@
-import electron from 'electron';
+import Store from 'store2';
+import Greatday from '../lib/greatday';
+
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -6,11 +8,6 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
-import Store from 'electron-store';
-import Greatday from '../lib/greatday';
-
-const ipcRenderer = electron.ipcRenderer || false;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -21,7 +18,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const store = new Store();
+const store = Store;
 const gd = new Greatday(store);
 
 function Login() {
@@ -39,7 +36,7 @@ function Login() {
     try {
       await gd.login();
       setMessage('');
-      router.push('/home');
+      router.push('/');
     } catch(e) {
       setMessage('Login failed.');
     }
@@ -53,7 +50,7 @@ function Login() {
   return (
     <React.Fragment>
       <Head>
-        <title>Great Day Auto. Clock In</title>
+        <title>GreatDay Genie</title>
       </Head>
       <div className={classes.root} style={{'overflow': 'hidden' }}>
         <Grid container direction="column" spacing={3} >

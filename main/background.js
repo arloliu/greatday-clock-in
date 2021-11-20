@@ -33,17 +33,8 @@ switch (os.platform()) {
 const assetsPath = app.isPackaged ? process.resourcesPath : path.join(__dirname, '..', 'resources');
 const icon_path = path.join(assetsPath, icon_file);
 
-// function debug_emitter(emitter, name) {
-//   var orig_emit = emitter.emit;
-//   emitter.emit = function() {
-//       var emitArgs = arguments;
-//       console.log("emitter " + name + " " + util.inspect(emitArgs));
-//       orig_emit.apply(emitter, arguments);
-//   }
-// }
-
 (async () => {
-  app.setName('greatday-clock-in');
+  app.setName('greatday-genie');
   await app.whenReady();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
@@ -63,18 +54,20 @@ const icon_path = path.join(assetsPath, icon_file);
   mainWindow.removeMenu();
 
   if (isProd) {
-    await mainWindow.loadURL('app://./home.html');
+    await mainWindow.loadURL('app://./index.html');
   } else {
     const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}/home`);
+    await mainWindow.loadURL(`http://localhost:${port}/`);
     mainWindow.webContents.openDevTools();
   }
 
   const trayListener = (event) => {
+    if (!isProd) {
+      return;
+    }
     event.preventDefault();
 
     if (tray) {
-      console.log('call win hide');
       return mainWindow.hide();
     }
 
@@ -82,7 +75,7 @@ const icon_path = path.join(assetsPath, icon_file);
     tray = new Tray(icon_path);
     const template = [
       {
-        label: 'Greatday',
+        label: 'Greatday Genie',
         icon: icon_path,
         click: () => {
           mainWindow.show();
@@ -101,19 +94,11 @@ const icon_path = path.join(assetsPath, icon_file);
         },
       },
     ];
-    console.log('buildFromTemplate');
     const contextMenu = Menu.buildFromTemplate(template);
-    tray.setToolTip('Greatday');
+    tray.setToolTip('Greatday Genie');
     tray.setContextMenu(contextMenu);
     mainWindow.hide();
   };
-
-  mainWindow.on('hide', () => { 
-    console.log('hide event');
-  })
-  mainWindow.on('closed', () => { 
-    console.log('closed event');
-  })
 
   mainWindow.on('close', trayListener);
 

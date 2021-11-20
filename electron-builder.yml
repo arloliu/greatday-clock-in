@@ -1,6 +1,6 @@
-appId: com.xfers.greaday.clockin
-productName: Greaday auto clock in
-copyright: Copyright © 20212 Arlo Liu
+appId: com.xfers.greatday.genie
+productName: Greaday Genie
+copyright: Copyright © 2021 Arlo Liu
 directories:
   output: dist
   buildResources: resources

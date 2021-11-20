@@ -62,7 +62,6 @@ export default function createWindow(windowName, options) {
       Object.assign(state, getCurrentPosition());
     }
     store.set(key, state);
-    console.log('saveState');
   };
 
   state = ensureVisibleOnSomeDisplay(restore());

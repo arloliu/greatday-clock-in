@@ -1,8 +1,8 @@
 {
   "private": false,
-  "name": "greatday-clock-in",
-  "description": "Auto clock in for Great Day",
-  "version": "1.0.0",
+  "name": "greatday-genie",
+  "description": "Great Day Genie",
+  "version": "1.0.1",
   "author": "Arlo Liu <arlo@gmail.com>",
   "main": "app/background.js",
   "scripts": {
@@ -11,25 +11,28 @@
     "build:mac": "nextron build --mac --x64",
     "build:linux": "nextron build --linux --x64",
     "build:win64": "nextron build --win --x64",
+    "build:web": "cd renderer; BUILD_WEB=1 next build; BUILD_WEB=1 next export",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@date-io/date-fns": "^1.3.13",
+    "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "axios": "^0.24.0",
-    "conf": "^10.0.3",
-    "@date-io/date-fns": "^2.11.0",
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/pickers": "^3.3.10",
+    "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-router-dom": "^6.0.2"
+    "react-router-dom": "^6.0.2",
+    "store2": "^2.12.0"
   },
   "devDependencies": {
+    "conf": "^10.0.3",
     "dotenv": "^10.0.0",
     "electron": "^15.0.0",
     "electron-builder": "^22.11.7",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.0.1",
+    "install": "^0.13.0",
     "next": "^11.1.2",
     "nextron": "^7.1.0"
   },
