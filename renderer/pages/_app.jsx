@@ -4,8 +4,6 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { theme } from '../lib/theme';
 
-import AppContext from '../components/AppContext';
-
 import Store from 'store2';
 import Greatday from '../lib/greatday';
 import Scheduler from '../lib/scheduler';
