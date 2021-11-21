@@ -2,6 +2,8 @@
 
 Good sleep is the basis for a good mood throughout the day, so we need a genie to help us to clock in.
 
+![Home](https://github.com/arloliu/greatday-clock-in/blob/main/images/gd-genie-screenshot-home.png?raw=true)
+
 ## Versions
 ### Online web:
 [https://arloliu.github.io/greatday-clock-in/](https://arloliu.github.io/greatday-clock-in/)
@@ -45,3 +47,11 @@ $ npm run build:linux
 $ npm run build:mac
 
 ```
+
+## Screenshots
+![Login](https://github.com/arloliu/greatday-clock-in/blob/main/images/gd-genie-screenshot-login.png?raw=true)
+
+![Attendance Log](https://github.com/arloliu/greatday-clock-in/blob/main/images/gd-genie-screenshot-attend-log.png?raw=true)
+
+![Process Log](https://github.com/arloliu/greatday-clock-in/blob/main/images/gd-genie-screenshot-process-log.png?raw=true)
+
