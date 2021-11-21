@@ -1,0 +1,12 @@
+node_modules
+*.log
+.next
+app
+dist
+.vscode
+.env
+renderer/out
+docs
+deploy_gh_pages.sh
+pack_release.sh
+release
