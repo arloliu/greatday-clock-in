@@ -2,16 +2,18 @@
   "private": false,
   "name": "greatday-genie",
   "description": "Great Day Genie",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Arlo Liu <arlo@gmail.com>",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
+    "dev:web": "cd renderer; BUILD_WEB=1 next dev",
     "build": "nextron build",
     "build:mac": "nextron build --mac --x64",
     "build:linux": "nextron build --linux --x64",
     "build:win64": "nextron build --win --x64",
     "build:web": "cd renderer; BUILD_WEB=1 next build; BUILD_WEB=1 next export",
+    "build:gh-page": "cd renderer; BUILD_GH_PAGE=1 next build; BUILD_GH_PAGE=1 next export",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {

@@ -8,10 +8,16 @@ class GreatDay {
     this.loginInfo = null;
     this.token = null;
     this.store = store;
- 
+
     // const storeName = (typeof store) === 'function' ? store.toString() : this.store.constructor.name;
     // console.log('GreatDay Store:', storeName);
   }
+
+  setCredential(email, password) {
+    this.store.set('email', email);
+    this.store.set('password', password);
+  }
+
   async getApiConfig() {
     if (this.apiConfig) {
       return this.apiConfig;
@@ -46,6 +52,7 @@ class GreatDay {
     }
 
     if (!email || !password) {
+      this.pushLog('ERROR', 'Login failed, email or password is empty');
       throw new Error('email or password is empty');
     }
 
@@ -82,6 +89,7 @@ class GreatDay {
         keep: true,
         versionApps: { code: '', number: 'Development' },
     };
+
     try {
       const resp = await this.apiReq.request({
         method: 'post',
@@ -105,7 +113,8 @@ class GreatDay {
 
       return this.loginInfo;
     } catch (e) {
-      throw new Error(`login fail, error: ${e.message}`);
+      this.pushLog('ERROR', `Login failed, error: ${e.message}`);
+      throw new Error(`Login fail, error: ${e.message}`);
     }
   }
 
@@ -140,10 +149,30 @@ class GreatDay {
     return (await this.apiReq.get('/currentTime')).data.data;
   }
 
-  async clockIn() {
-    await this.checkToken();
-
+  async keepAlive() {
     try {
+      if (!this.store.get('auth-token')) {
+        throw new Error('Auth. token not exist');
+      }
+      const result = await axios({
+        method: 'get',
+        url: 'https://saas.greatdayhr.com/',
+        headers: {
+          'content-type': 'application/json; charset=utf-8',
+          'authorization': this.token,
+        },
+      });
+      return result.data;
+    } catch(e) {
+      this.pushLog('ERROR', `Keep alive failed, error: ${e.message}`);
+      return false;
+    }
+  }
+
+  async clockIn() {
+    try {
+      await this.checkToken();
+
       const empId = this.store.get('empId');
       const currentTime = await this.getCurrentTime();
 
@@ -168,10 +197,10 @@ class GreatDay {
       const getNewTodayAttendanceResult = (await this.apiReq.post('/attendances/getNewTodayAttendance?', getNewTodayAttendanceData)).data.data;
       console.log('getNewTodayAttendanceResult:', getNewTodayAttendanceResult);
 
-      this.pushLog('clockInLog', 'Clock in success');
+      this.pushLog('INFO', 'Clock in success');
     } catch (e) {
-      this.pushLog('clockInLog', `Clock in fails, error: ${e.message}`);
-      throw new Error(`clockIn failed, error: ${e.message}`);
+      this.pushLog('ERROR', `Clock in fails, error: ${e.message}`);
+      throw new Error(`Clock in fails, error: ${e.message}`);
     }
 
     return true;
@@ -191,8 +220,8 @@ class GreatDay {
 
       return result;
     } catch (e) {
-      console.log(e);
-      throw new Error(`getAttendanceLog failed, error: ${e.message}`);
+      this.pushLog('ERROR', `Get attendance log failed, error: ${e.message}`);
+      throw new Error(`Get attendance log failed, error: ${e.message}`);
     }
   }
 
@@ -217,8 +246,8 @@ class GreatDay {
 
       return result;
     } catch (e) {
-      console.log(e);
-      throw new Error(`getAttendanceLog failed, error: ${e.message}`);
+      this.pushLog('ERROR', `Get attendance list failed, error: ${e.message}`);
+      throw new Error(`Get attendance list failed, error: ${e.message}`);
     }
   }
 
@@ -228,24 +257,24 @@ class GreatDay {
     Object.assign(this.apiReq.defaults.headers.common, param);
   }
 
-  pushLog(key, message) {
-    console.log(` pushLog: (${key}) ${message}`);
+  pushLog(level, message) {
+    console.log(` pushLog: [${level}] ${message}`);
     let decodedLogs = null;
-    const logs = this.store.get(key);
+    const logs = this.store.get('processLog');
     if (!logs) {
-      decodedLogs = [{timestamp: Date.now(), message: message}];
+      decodedLogs = [{level: level.toUpperCase(), timestamp: Date.now(), message: message}];
     } else {
       decodedLogs = JSON.parse(logs);
-      decodedLogs.unshift({timestamp: Date.now(), message: message});
+      decodedLogs.unshift({level: level.toUpperCase(), timestamp: Date.now(), message: message});
     }
     if (decodedLogs.length > 100) {
       decodedLogs = decodedLogs.slice(0, 100);
     }
-    this.store.set(key, JSON.stringify(decodedLogs));
+    this.store.set('processLog', JSON.stringify(decodedLogs));
   }
 
-  getLogs(key) {
-    const logs = this.store.get(key);
+  getLogs() {
+    const logs = this.store.get('processLog');
     if (!logs) {
       return [];
     }

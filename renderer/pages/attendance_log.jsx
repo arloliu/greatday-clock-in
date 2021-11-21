@@ -84,7 +84,7 @@ function Login() {
   return (
     <React.Fragment>
       <Head>
-        <title>GreatDay Genie</title>
+        <title>Attendance Log - GreatDay Genie</title>
       </Head>
       <div className={classes.root} style={{'overflow': 'hidden' }}>
         <Grid container direction="column" spacing={3}>

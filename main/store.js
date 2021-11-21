@@ -1,6 +1,6 @@
 const path = require('path');
 class LocalStore {
-  constructor() {
+  constructor(appName) {
 
   }
 }

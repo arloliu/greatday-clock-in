@@ -38,7 +38,7 @@ function Login() {
       setMessage('');
       router.push('/');
     } catch(e) {
-      setMessage('Login failed.');
+      setMessage(`Login failed. error: ${e.message}`);
     }
   };
 
@@ -50,7 +50,7 @@ function Login() {
   return (
     <React.Fragment>
       <Head>
-        <title>GreatDay Genie</title>
+        <title>Login - GreatDay Genie</title>
       </Head>
       <div className={classes.root} style={{'overflow': 'hidden' }}>
         <Grid container direction="column" spacing={3} >
@@ -61,7 +61,7 @@ function Login() {
             <TextField id="password" label="Password" label="Password"
               type="password" autoComplete="current-password"
               value={password}
-              onChange={e => setPassword(e.target.value)} 
+              onChange={e => setPassword(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>

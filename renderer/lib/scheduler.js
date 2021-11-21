@@ -5,6 +5,7 @@ class Scheduler {
     this.callback = undefined;
     this.startIntervalId = null;
     this.endIntervalId = null;
+    this.keepAliveIntervalId = null;
 
     this.started = false;
   }
@@ -64,7 +65,7 @@ class Scheduler {
 
       // console.log(`schedule clockin for start, curTime=${curTime}, nextTime=${nextTime}`);
       if (lastShiftTime && curTime >= nextTime) {
-        this.gd.pushLog('clockInLog', `Execute schedule clock in for shift start, retry count=${retryCount}`);
+        this.gd.pushLog('INFO', `Execute schedule clock in for shift start, retry count=${retryCount}`);
         const result = await this.clockIn();
         console.log('clockIn result:', result);
         if (result) {
@@ -86,7 +87,7 @@ class Scheduler {
 
       // console.log(`schedule clockin for end, curTime=${curTime}, nextTime=${nextTime}`);
       if (lastShiftTime && curTime >= nextTime) {
-        this.gd.pushLog('clockInLog', `Execute schedule clock in for shift end retry count=${retryCount}`);
+        this.gd.pushLog('INFO', `Execute schedule clock in for shift end retry count=${retryCount}`);
         const result = await this.clockIn();
         if (result) {
           retryCount = 0;
@@ -98,6 +99,14 @@ class Scheduler {
         }
       }
     }, 10000);
+
+    // execute keep alive per 10 mins
+    this.keepAliveIntervalId = setInterval( async () => {
+      const result = await this.gd.keepAlive();
+      if (!result) {
+        await this.gd.checkToken();
+      }
+    }, 60 * 10 *1000);
   }
 }
 

@@ -1,4 +1,4 @@
-const basePath = process.env.BUILD_WEB ? '/greatday-clock-in' : '';
+const basePath = process.env.BUILD_GH_PAGE ? '/greatday-clock-in' : '';
 module.exports = {
   basePath: basePath,
   assetPrefix: `${basePath}/`,
@@ -7,7 +7,7 @@ module.exports = {
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
-      if (!process.env.BUILD_WEB) {
+      if (!process.env.BUILD_WEB && !process.env.BUILD_GH_PAGE) {
         config.target = 'electron-renderer';
       }
     }

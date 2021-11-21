@@ -27,15 +27,20 @@ const useStyles = makeStyles((theme) =>
     },
     table: {
       width: "max-content",
-      minWidth: "50%",
     },
     button: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
       verticalAlign: 'bottom',
     },
-    success: {
-      color: '#009688',
+    error: {
+      color: '#fc0345',
+    },
+    info: {
+      color: '#000',
+    },
+    warn: {
+      color: '#bf5e0a',
     },
   })
 );
@@ -51,10 +56,12 @@ function Login() {
 
   const getClockInLog = async () => {
     try {
-      const logs = gd.getLogs('clockInLog')
+      const logs = gd.getLogs()
       setClockInLog(logs.map((log) => ({
         key: log.timestamp,
         time: Moment(log.timestamp).format('DD MMM YYYY HH:mm:ss'),
+        level: log.level,
+        className: classes[log.level.toLowerCase()],
         message: log.message,
       })));
     } catch(e) {
@@ -73,7 +80,7 @@ function Login() {
   return (
     <React.Fragment>
       <Head>
-        <title>GreatDay Genie</title>
+        <title>Process Log - GreatDay Genie</title>
       </Head>
       <div className={classes.root} style={{'overflow': 'hidden' }}>
         <Grid container direction="column" spacing={3}>
@@ -92,6 +99,7 @@ function Login() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">Time</TableCell>
+                    <TableCell align="left">Level</TableCell>
                     <TableCell align="left">Log Message</TableCell>
                   </TableRow>
                 </TableHead>
@@ -99,7 +107,8 @@ function Login() {
                   {clockInLog.map((row) => (
                     <TableRow key={row.key}>
                       <TableCell align="left">{row.time}</TableCell>
-                      <TableCell align="left">{row.message}</TableCell>
+                      <TableCell align="left" className={row.className}>{row.level}</TableCell>
+                      <TableCell align="left" className={row.className}>{row.message}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

@@ -3,6 +3,7 @@ node_modules
 .next
 app
 dist
+release
 .vscode
 .env
 renderer/out

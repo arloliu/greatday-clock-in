@@ -23,29 +23,62 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      textAlign: 'center',
-    paddingTop: theme.spacing(4),
+      textAlign: 'left',
+      paddingTop: theme.spacing(4),
+    },
+    table: {
+      width: 'max-content',
+      minWidth: '600px',
+      [theme.breakpoints.down('xs')]: {
+        minWidth: '200px',
+      },
     },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: 150,
+      width: '100%',
       verticalAlign: 'top',
+      [theme.breakpoints.down('xs')]: {
+        width: '90%',
+        marginLeft: theme.spacing(1),
+        marginRight: 0,
+        paddingLeft: 0,
+      },
     },
     selectField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: 120,
+      width: '100%',
       verticalAlign: 'bottom',
+      [theme.breakpoints.down('xs')]: {
+        width: '90%',
+        marginLeft: theme.spacing(1),
+        marginRight: 0,
+        paddingLeft: 0,
+      },
     },
     button: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      verticalAlign: 'bottom',
+      height: '100%',
+    },
+    menuButton: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: theme.spacing(1),
+        borderRadius: '0px',
+      }
     },
     scheduleInfo: {
       marginLeft: theme.spacing(2),
@@ -87,12 +120,12 @@ function calcShiftTime(shiftTimeStr, randomRange, lastShiftTime, nextDay = false
 
 const formatShiftTimeStr = (time) => {
   if (!time) {
-    return '';
+    return 'N/A, needs to click UPDATE button.';
   }
 
-  const d = Moment(time)
+  const d = Moment(time);
   if (d == 'Invalid date') {
-    return '';
+    return 'N/A, needs to click UPDATE button.';
   }
   return d.format('YYYY/MM/DD HH:mm:ss');
 };
@@ -122,6 +155,8 @@ function Index(props) {
   let [lastClockInTime, setLastClockInTime] = React.useState(store.get('lastClockInTime'));
   let [attendList, setAttendList] = React.useState([]);
 
+  const theme = useTheme();
+  const smUpMatches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const updateShiftStartTime = (nextDay = false) => {
     const lastShiftTime = new Date(store.get('lastClockInTime'));
@@ -229,11 +264,18 @@ function Index(props) {
   });
 
   useEffect(() => {
+    if (!store.get('auth-token')) {
+      return;
+    }
     getAttendanceList();
 
   }, [lastClockInTime]);
 
   useEffect(() => {
+    if (!store.get('auth-token')) {
+      return;
+    }
+
     const calRemaining = (secs) => ({
       day: secs > 86400 ? parseInt(secs / 86400) : 0,
       hour: secs > 3600 ? parseInt((secs % 86400) / 3600) : 0,
@@ -247,7 +289,6 @@ function Index(props) {
       const end_secs = Moment.utc(nextShiftEndTime).diff(now, 'seconds');
       const start = calRemaining(start_secs);
       const end = calRemaining(end_secs);
-
       setNextShiftStartRemaining(start_secs > 0 ? `(Remaining ${start.day} days ${start.hour} hrs ${start.min} mins ${start.sec} secs)` : '');
       setNextShiftEndRemaining(end_secs > 0 ? `(Remaining ${end.day} days ${end.hour} hrs ${end.min} mins ${end.sec} secs)` : '');
     }, 1000);
@@ -269,7 +310,7 @@ function Index(props) {
       </Head>
       <div className={classes.root} style={{'overflow': 'hidden' }}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={3}>
             <TextField
               id="shiftStartTime"
               label="Shift Start Time"
@@ -283,6 +324,9 @@ function Index(props) {
                 store.set('shiftStartTime', e.target.value);
               }}
             />
+          </Grid>
+
+          <Grid item xs={12} sm={3}>
             <TextField
               id="shiftEndTime"
               label="Shift End Time"
@@ -296,11 +340,13 @@ function Index(props) {
                 store.set('shiftEndTime', e.target.value);
               }}
             />
-            <FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={3}>
+            <FormControl className={classes.selectField}>
               <InputLabel id="random-range-label">Random Range</InputLabel>
               <Select
                 value={randomRange}
-                className={classes.selectField}
                 onChange={e => {
                   setRandomRange(e.target.value);
                   store.set('randomRange', e.target.value);
@@ -313,6 +359,9 @@ function Index(props) {
                 <MenuItem value={60}>70 Minutes</MenuItem>
               </Select>
             </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={3}>
             <Button variant="contained" color="primary" className={classes.button} onClick={updateShiftTime}>
               Update
             </Button>
@@ -321,11 +370,18 @@ function Index(props) {
           <Grid item xs={12} align="left">
             <Divider />
             <Typography variant="subtitle1" gutterBottom className={classes.scheduleInfo}>
-              Next Scheduled Shift Start Time: {nextShiftStartTimeStr}
+
+              Next Scheduled Shift Start Time:&nbsp;
+              { !smUpMatches && <br />}
+              {nextShiftStartTimeStr}
+              { !smUpMatches && <br />}
               <span className={classes.remaining}>{nextShiftStartRemaining}</span>
             </Typography>
             <Typography variant="subtitle1" gutterBottom className={classes.scheduleInfo}>
-              Next Scheduled  Shift End Time: &nbsp; {nextShiftEndTimeStr}
+              Next Scheduled  Shift End Time: &nbsp;&nbsp;
+              { !smUpMatches && <br />}
+              {nextShiftEndTimeStr}
+              { !smUpMatches && <br />}
               <span className={classes.remaining}>{nextShiftEndRemaining}</span>
             </Typography>
             <Typography variant="subtitle1" gutterBottom className={classes.scheduleInfo}>
@@ -335,21 +391,21 @@ function Index(props) {
           </Grid>
 
           <Grid item xs={12}>
-            <Button variant="contained" color="secondary" className={classes.button}
+            <Button variant="contained" color="secondary" className={classes.menuButton}
               onClick={async () => {
-                gd.pushLog('clockInLog', 'Execute manual clock in');
+                gd.pushLog('INFO', 'Execute manual clock in');
                 await clockIn();
               }}
             >
               Manual Clock In
             </Button>
-            <Button variant="contained" color="default" className={classes.button} onClick={() => { router.push('/attendance_log'); }}>
+            <Button variant="contained" color="default" className={classes.menuButton} onClick={() => { router.push('/attendance_log'); }}>
               Attendance Logs
             </Button>
-            <Button variant="contained" color="default" className={classes.button} onClick={() => { router.push('/clockin_log'); }}>
-              Clock-In Logs
+            <Button variant="contained" color="default" className={classes.menuButton} onClick={() => { router.push('/clockin_log'); }}>
+              Process Logs
             </Button>
-            <Button variant="contained" color="default" className={classes.button} onClick={() => { router.push('/login'); }}>
+            <Button variant="contained" color="default" className={classes.menuButton} onClick={() => { router.push('/login'); }}>
               Back to Login Page
             </Button>
           </Grid>
@@ -362,7 +418,7 @@ function Index(props) {
 
           <Grid item xs={12}>
             <TableContainer>
-              <Table className={classes.table} aria-label="simple table">
+              <Table className={classes.table} aria-label="attendance list table">
                 <TableHead>
                   <TableRow>
                     <TableCell>NAME</TableCell>

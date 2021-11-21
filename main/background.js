@@ -4,7 +4,6 @@ import util from 'util';
 import { app, session, ipcMain, Menu, Tray } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
-import Store from 'electron-store';
 
 const isProd = process.env.NODE_ENV === 'production';
 
