@@ -48,10 +48,3 @@ $ npm run build:mac
 
 ```
 
-## Screenshots
-![Login](https://github.com/arloliu/greatday-clock-in/blob/main/images/gd-genie-screenshot-login.png?raw=true)
-
-![Attendance Log](https://github.com/arloliu/greatday-clock-in/blob/main/images/gd-genie-screenshot-attend-log.png?raw=true)
-
-![Process Log](https://github.com/arloliu/greatday-clock-in/blob/main/images/gd-genie-screenshot-process-log.png?raw=true)
-
