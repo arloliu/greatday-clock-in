@@ -1,5 +1,5 @@
 #!/bin/bash
-npm run build:web
+npm run build:gh-page
 if test $? != 0; then exit; fi
 
 git co gh-pages
