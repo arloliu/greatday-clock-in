@@ -2,7 +2,7 @@
   "private": false,
   "name": "greatday-genie",
   "description": "Great Day Genie",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Arlo Liu <arlo@gmail.com>",
   "main": "app/background.js",
   "scripts": {

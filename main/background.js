@@ -49,6 +49,9 @@ const icon_path = path.join(assetsPath, icon_file);
     width: 800,
     height: 1000,
     icon: icon_path,
+    webPreferences: {
+      webSecurity: false,
+    },
   });
   mainWindow.removeMenu();
 
